@@ -30,12 +30,12 @@ def read(folder, dataset, file_ending, skip_rows=0):
 def evaluate(file_path, topK=10):
     df_res = pd.read_csv(file_path, sep='\t', header=None, names=['user', 'recs'])
 
-    dataset_path = 'lfm-evaluation'
+    dataset_path = 'evaluation-data'
     dataset_name = 'lfm-evaluation'
     users = read(dataset_path, dataset_name, 'user')
     items = read(dataset_path, dataset_name, 'item')
     test_inters = read(dataset_path, dataset_name, 'inter_secret_test')
-    test_users = pd.read_csv('test_users.txt').squeeze()
+    test_users = pd.read_csv('evaluation-data/test_users.txt').squeeze()
 
     test = rec.inter_matr_implicit(users=users, items=items, interactions=test_inters)
 
@@ -65,6 +65,7 @@ if __name__ == "__main__":
             method = Path(res_file).parts[-1].split("_")[1]
             
             res.append(evaluate_submission(res_file, method=method))
-        
-    pd.DataFrame(res).to_csv("evaluation_results.tsv", sep='\t', index=False)
+    df = pd.DataFrame(res)
+    print(df)
+    df.to_csv("evaluation_results.tsv", sep='\t', index=False)
 
